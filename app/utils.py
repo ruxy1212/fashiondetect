@@ -62,17 +62,22 @@ def get_sign_dicts(directory):
 def perform_instance_segmentation(image, output_format='png'):
     cfg = get_cfg()
 
-    cfg.merge_from_file("config.yml")
-    cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.5  # set threshold for this model
+    cfg.merge_from_file("config.yml") #"/training_output/model_config.yml"
+    cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = 0.7  # set threshold for this model
     cfg.MODEL.DEVICE = "cpu"
-    cfg.MODEL.WEIGHTS = os.path.join("models","model_final.pth")
+    cfg.MODEL.WEIGHTS = os.path.join("training_output","model_final.pth")#"/training_output/model_final.pth"
 
     predictor = DefaultPredictor(cfg)
 
-    img = cv2.imdecode(np.fromstring(image.read(), np.uint8), cv2.IMREAD_UNCHANGED)
+    # img = cv2.imdecode(np.asarray(bytearray(image.read()), np.uint8), cv2.IMREAD_UNCHANGED) #fromstring,
+    img = cv2.imdecode(np.asarray(bytearray(image.read()), np.uint8), cv2.IMREAD_UNCHANGED)
+    if img.shape[-1] == 4:  # Check if image has alpha channel
+        img = cv2.cvtColor(img, cv2.COLOR_BGRA2BGR)
+    else:
+        img = cv2.cvtColor(img, cv2.COLOR_RGBA2BGR) 
     outputs = predictor(img[..., ::-1])
     
-    v = Visualizer(img[:, :, ::-1], MetadataCatalog.get("traffic_sign_train"), scale=0.5)
+    v = Visualizer(img[:, :, ::-1], MetadataCatalog.get("dt_val"), scale=0.5)
 
     result_image = v.draw_instance_predictions(outputs["instances"].to("cpu")).get_image()
 
@@ -81,7 +86,7 @@ def perform_instance_segmentation(image, output_format='png'):
 
     # Resize the image to the target size
     pil_image = Image.fromarray(result_array)
-    pil_image = pil_image.resize((680,400))  
+    # pil_image = pil_image.resize((680,400))  
     img_buffer = io.BytesIO()
 
     # Save the resized image to the buffer in the specified format

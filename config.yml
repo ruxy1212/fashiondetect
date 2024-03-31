@@ -10,10 +10,9 @@ DATASETS:
   PRECOMPUTED_PROPOSAL_TOPK_TRAIN: 2000
   PROPOSAL_FILES_TEST: []
   PROPOSAL_FILES_TRAIN: []
-  TEST:
-  - traffic_sign_test1_val
+  TEST: []
   TRAIN:
-  - traffic_sign_test1_train
+  - dt_train
 GLOBAL:
   HACK: 1.0
 INPUT:
@@ -24,7 +23,7 @@ INPUT:
     - 0.9
     TYPE: relative_range
   FORMAT: BGR
-  MASK_FORMAT: polygon
+  MASK_FORMAT: bitmask
   MAX_SIZE_TEST: 1333
   MAX_SIZE_TRAIN: 1333
   MIN_SIZE_TEST: 800
@@ -98,7 +97,7 @@ MODEL:
     - false
     - false
     - false
-    DEPTH: 50
+    DEPTH: 101
     NORM: FrozenBN
     NUM_GROUPS: 1
     OUT_FEATURES:
@@ -181,7 +180,7 @@ MODEL:
     USE_FED_LOSS: false
     USE_SIGMOID_CE: false
   ROI_HEADS:
-    BATCH_SIZE_PER_IMAGE: 512
+    BATCH_SIZE_PER_IMAGE: 128
     IN_FEATURES:
     - p2
     - p3
@@ -194,10 +193,10 @@ MODEL:
     - 0.5
     NAME: StandardROIHeads
     NMS_THRESH_TEST: 0.5
-    NUM_CLASSES: 4
+    NUM_CLASSES: 48
     POSITIVE_FRACTION: 0.25
     PROPOSAL_APPEND_GT: true
-    SCORE_THRESH_TEST: 0.3
+    SCORE_THRESH_TEST: 0.05
   ROI_KEYPOINT_HEAD:
     CONV_DIMS:
     - 512
@@ -268,7 +267,7 @@ MODEL:
     NAME: SemSegFPNHead
     NORM: GN
     NUM_CLASSES: 54
-  WEIGHTS: ./output/model_final.pth
+  WEIGHTS: https://dl.fbaipublicfiles.com/detectron2/COCO-InstanceSegmentation/mask_rcnn_R_101_FPN_3x/138205316/model_final_a3ec72.pkl
 OUTPUT_DIR: ./output
 SEED: -1
 SOLVER:
@@ -286,15 +285,13 @@ SOLVER:
   GAMMA: 0.1
   IMS_PER_BATCH: 2
   LR_SCHEDULER_NAME: WarmupMultiStepLR
-  MAX_ITER: 1000
+  MAX_ITER: 3000
   MOMENTUM: 0.9
   NESTEROV: false
   NUM_DECAYS: 3
   REFERENCE_WORLD_SIZE: 0
   RESCALE_INTERVAL: false
-  STEPS:
-  - 210000
-  - 250000
+  STEPS: []
   WARMUP_FACTOR: 0.001
   WARMUP_ITERS: 1000
   WARMUP_METHOD: linear

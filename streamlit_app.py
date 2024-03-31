@@ -7,7 +7,7 @@ import base64
 
 st.set_page_config(page_title="Image Segmentation App")
 
-FLASK_SERVER_URL = "http://127.0.0.1:5000/segment"
+FLASK_SERVER_URL = "https://cautious-goggles-pqjw79wqqp5hxwr-5000.app.github.dev/segment" #"http://127.0.0.1:5000/segment"
 
 def get_segmented_image(response):
     img_bytes = BytesIO(response.content)

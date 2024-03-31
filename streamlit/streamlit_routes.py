@@ -3,7 +3,7 @@ from app.utils import perform_instance_segmentation
 
 main_bp = Blueprint('main', __name__)
 
-@main_bp.route('/segment', methods=['POST'])
+@main_bp.route('/segments', methods=['POST'])
 def segment():
     if 'image' in request.files:
         # Handle image upload and perform instance segmentation

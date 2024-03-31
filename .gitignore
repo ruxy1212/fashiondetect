@@ -131,8 +131,12 @@ detectron2/
 
 # Dataset
 train/
+test/
 val/
 models/
+training_output/
+instances_attributes_train2020.json
+instances_attributes_val2020.json
 
 # Spyder project settings
 .spyderproject
